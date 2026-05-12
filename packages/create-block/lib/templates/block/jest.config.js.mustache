@@ -1,0 +1,19 @@
+module.exports = {
+	testEnvironment: 'jsdom',
+	preset: '@wordpress/jest-preset-default',
+	testPathIgnorePatterns: [
+		'/node_modules/',
+		'/build/',
+		'/wp-cli/',
+		'/vendor/',
+	],
+	transform: {
+		'^.+\\.[jt]sx?$': [ '@wordpress/scripts/config/jest-unit.config.js', { swc: true } ],
+	},
+	moduleNameMapper: {
+		'^@wordpress/(.*)$': 'wordpress -resolvable -throwError ($1)',
+	},
+	snapshotSerializers: [ '@wordpress/jest-preset-default/snapshot-serializer.js' ],
+	setupFilesAfterEnv: [ '<rootDir>/jest.config.js.setup.js' ],
+	testPathPattern: [ 'test' ],
+};

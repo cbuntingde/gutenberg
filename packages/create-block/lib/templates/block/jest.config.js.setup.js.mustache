@@ -1,0 +1,91 @@
+/**
+ * Jest setup file for unit testing.
+ *
+ * @see https://developer.wordpress.org/block-editor/reference-guides/packages/packages-scripts/#jest
+ */
+
+/**
+ * Internal dependencies
+ */
+import { fetch } from 'node-fetch';
+
+/**
+ * Use a minimal implementation of IntersectionObserver for unit testing.
+ *
+ * @see https://developer.wordpress.org/block-editor/reference-guides/packages/packages-jest/#intersectionobserver
+ */
+global.IntersectionObserver = class IntersectionObserver {
+	observe() {
+		return null;
+	}
+	disconnect() {
+		return null;
+	}
+	unobserve() {
+		return null;
+	}
+};
+
+/**
+ * Mock the native fetch function so that API calls work correctly.
+ *
+ * @see https://developer.wordpress.org/block-editor/reference-guides/packages/packages-jest/#fetch
+ */
+if ( ! global.fetch ) {
+	global.fetch = fetch;
+}
+
+/**
+ * Mock window.matchMedia.
+ *
+ * @see https://developer.wordpress.org/block-editor/reference-guides/packages/packages-jest/#matchmedia
+ */
+Object.defineProperty( window, 'matchMedia', {
+	writable: true,
+	value: jest.fn().mockImplementation( ( query ) => ( {
+		matches: false,
+		media: query,
+		onchange: null,
+		addListener: jest.fn(),
+		removeListener: jest.fn(),
+		addEventListener: jest.fn(),
+		removeEventListener: jest.fn(),
+		dispatchEvent: jest.fn(),
+	} ) ),
+} );
+
+/**
+ * Mock ResizeObserver.
+ *
+ * @see https://developer.wordpress.org/block-editor/reference-guides/packages/packages-jest/#resizeobserver
+ */
+global.ResizeObserver = class ResizeObserver {
+	observe() {
+		return null;
+	}
+	disconnect() {
+		return null;
+	}
+	unobserve() {
+		return null;
+	}
+};
+
+/**
+ * Mock scrollTo.
+ */
+window.scrollTo = jest.fn();
+
+/**
+ * Suppress the warning: "Warning: An update to %s inside a test was not wrapped in act(...)."
+ * This warning is triggered when state updates happen during tests.
+ *
+ * @see https://github.com/WordPress/gutenberg/blob/HEAD/packages/jest-preset-default/jest-setup.js#L54
+ */
+const originalConsoleError = console.error.bind( console );
+console.error = ( ...args ) => {
+	if ( args[ 0 ]?.includes?.( 'was not wrapped in act' ) ) {
+		return;
+	}
+	originalConsoleError( ...args );
+};

@@ -1,0 +1,49 @@
+/**
+ * Unit tests for the {{title}} block.
+ *
+ * @see https://developer.wordpress.org/block-editor/reference-guides/testing/tutorials/block-unit-testing/
+ */
+
+/**
+ * Internal dependencies
+ */
+import { render } from '@testing-library/react';
+import { registerBlockType, unregisterBlockType } from '@wordpress/blocks';
+import metadata from '../block.json';
+
+describe( '{{pascalCase title}}', () => {
+	const blockName = metadata.name;
+
+	beforeAll( () => {
+		// Register the block before running tests.
+		// This ensures the block type is available for all tests.
+		const Edit = require( '../edit' ).default;
+		registerBlockType( blockName, {
+			edit: Edit,
+			save: () => null,
+		} );
+	} );
+
+	afterAll( () => {
+		// Clean up by unregistering the block.
+		unregisterBlockType( blockName );
+	} );
+
+	describe( 'block registration', () => {
+		it( 'should register the block type', () => {
+			expect( WP.blocks.hasBlockType( blockName ) ).toBe( true );
+		} );
+
+		it( 'should have the correct block name from metadata', () => {
+			expect( metadata.name ).toBe( '{{namespace}}/{{slug}}' );
+		} );
+	} );
+
+	describe( 'edit component', () => {
+		it( 'should render without crashing', () => {
+			const Edit = require( '../edit' ).default;
+			const { container } = render( <Edit /> );
+			expect( container ).toBeTruthy();
+		} );
+	} );
+} );
