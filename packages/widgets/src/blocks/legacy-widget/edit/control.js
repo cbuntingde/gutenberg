@@ -4,6 +4,7 @@
 import apiFetch from '@wordpress/api-fetch';
 import { debounce } from '@wordpress/compose';
 import { __ } from '@wordpress/i18n';
+import { safeHTML } from '@wordpress/dom';
 
 /**
  * An API for creating and loading a widget control (a <div class="widget">
@@ -176,14 +177,14 @@ export default class Control {
 		try {
 			if ( this.id ) {
 				const { form } = await saveWidget( this.id );
-				this.content.innerHTML = form;
+				this.content.innerHTML = safeHTML( form );
 			} else if ( this.idBase ) {
 				const { form, preview } = await encodeWidget( {
 					idBase: this.idBase,
 					instance: this.instance,
 					number: this.number,
 				} );
-				this.content.innerHTML = form;
+				this.content.innerHTML = safeHTML( form );
 				this.hasPreview = ! isEmptyHTML( preview );
 
 				// If we don't have an instance, perform a save right away. This
@@ -248,7 +249,7 @@ export default class Control {
 		try {
 			if ( this.id ) {
 				const { form } = await saveWidget( this.id, formData );
-				this.content.innerHTML = form;
+				this.content.innerHTML = safeHTML( form );
 
 				if ( window.jQuery ) {
 					const { jQuery: $ } = window;

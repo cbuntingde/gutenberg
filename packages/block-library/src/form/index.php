@@ -70,6 +70,10 @@ function block_core_form_send_email() {
 
 	// Get the POST data.
 	$params = wp_unslash( $_POST );
+	// Validate required parameters exist.
+	if ( ! isset( $params['_wp_http_referer'] ) ) {
+		wp_send_json_error( 'Missing referer', 400 );
+	}
 	// Start building the email content.
 	$content = sprintf(
 		/* translators: %s: The request URI. */

@@ -41,7 +41,10 @@ function render_block_core_legacy_widget( $attributes ) {
 		if ( ! hash_equals( wp_hash( $serialized_instance ), (string) $attributes['instance']['hash'] ) ) {
 			return '';
 		}
-		$instance = unserialize( $serialized_instance );
+		$instance = json_decode( $serialized_instance, true );
+		if ( json_last_error() !== JSON_ERROR_NONE ) {
+			$instance = array();
+		}
 	} else {
 		$instance = array();
 	}
