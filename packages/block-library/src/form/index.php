@@ -4,6 +4,7 @@
  *
  * @package WordPress
  */
+declare(strict_types=1);
 
 /**
  * Renders the `core/form` block on server.
