@@ -11,8 +11,23 @@
  *
  * @package gutenberg
  */
+declare(strict_types=1);
 
 defined( 'GUTENBERG_MINIMUM_WP_VERSION' ) or define( 'GUTENBERG_MINIMUM_WP_VERSION', '6.8' );
+
+/**
+ * Set security headers for HTTP responses.
+ *
+ * @since 23.1.1
+ */
+function gutenberg_security_headers() {
+	if ( ! headers_sent() ) {
+		header( 'X-Content-Type-Options: nosniff' );
+		header( 'X-Frame-Options: DENY' );
+		header( 'Referrer-Policy: strict-origin-when-cross-origin' );
+	}
+}
+add_action( 'send_headers', 'gutenberg_security_headers' );
 
 gutenberg_pre_init();
 
