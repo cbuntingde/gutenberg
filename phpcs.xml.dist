@@ -2,8 +2,8 @@
 <ruleset name="WordPress Coding Standards for Gutenberg Plugin">
 	<description>Sniffs for WordPress plugins, with minor modifications for Gutenberg</description>
 
-	<!-- Check for cross-version support for PHP 7.4 and higher. -->
-	<config name="testVersion" value="7.4-"/>
+	<!-- Check for cross-version support for PHP 8.3 and higher. -->
+	<config name="testVersion" value="8.3-"/>
 	<rule ref="PHPCompatibilityWP">
 		<include-pattern>*\.php$</include-pattern>
 	</rule>
