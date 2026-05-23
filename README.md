@@ -19,7 +19,7 @@ Key priorities: **Post-save validation**, **modern PHP architecture**, **strict 
 | Node.js         | 20.19.0    | Latest LTS    |
 | npm             | 10.2.3     | Latest        |
 | PHP             | 8.3        | 8.3+          |
-| WordPress       | 6.4        | Latest stable |
+| WordPress       | 7.0        | Latest stable |
 | MySQL / MariaDB | 8.0 / 10.6 | 8.0+ / 10.11+ |
 | PHPStan         | Level 8    | Level 9+      |
 
@@ -79,7 +79,7 @@ For full environment setup including Docker configuration, web server settings, 
 
 -   **PHPStan Level 8** — Static analysis passes at Level 8+, zero tolerated errors
 -   **PSR-12 Coding Style** — All code enforces PSR-12 formatting via pre-commit hooks
--   **Zero Deprecated Functions** — No usage of deprecated WordPress functions, `extract()`, or `create_function()`
+-   **Zero Deprecated Code** — Removed all deprecated and dead code for WordPress 7.0 compatibility (1877 lines deleted)
 -   **Modern Patterns** — Match expressions, readonly properties, named arguments where appropriate
 
 ### Plugin Compatibility
@@ -200,7 +200,7 @@ Changes are organized by feature area. Each entry describes what was changed and
 ### Code Quality
 
 -   **PHPStan Level 8** — Static analysis configured at Level 8+, blocks merge on any violation
--   **Zero Deprecated Functions** — Removed usage of deprecated WordPress functions, `extract()`, and `create_function()`
+-   **Zero Deprecated Code** — Removed all deprecated and dead code for WordPress 7.0 compatibility (Font Face BC layer, deprecated script modules, deprecated global styles, deprecated Theme JSON methods, deprecated Navigation block code, legacy social link blocks)
 -   **Modern Patterns** — Implemented match expressions, readonly properties, named arguments where appropriate
 
 ### Error Handling Improvements
