@@ -1409,24 +1409,6 @@ function block_core_navigation_block_tree_has_block_type( $blocks, $block_type, 
 }
 
 /**
- * Returns true if the navigation block contains a nested navigation block.
- *
- * @since 6.2.0
- * @deprecated 7.0.0 Use block_core_navigation_block_tree_has_block_type() instead.
- *
- * @param WP_Block_List $inner_blocks Inner block instance to be normalized.
- * @return bool true if the navigation block contains a nested navigation block.
- */
-function block_core_navigation_block_contains_core_navigation( $inner_blocks ) {
-	_deprecated_function( __FUNCTION__, '7.0.0', 'block_core_navigation_block_tree_has_block_type()' );
-
-	return block_core_navigation_block_tree_has_block_type(
-		$inner_blocks,
-		'core/navigation'
-	);
-}
-
-/**
  * Retrieves the appropriate fallback to be used on the front of the
  * site when there is no menu assigned to the Nav block.
  *

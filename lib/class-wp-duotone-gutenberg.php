@@ -799,18 +799,7 @@ class WP_Duotone_Gutenberg {
 		return self::$global_styles_presets;
 	}
 
-	/**
-	 * Ensure all possible duotone presets are ready.
-	 * This function is deprecated, as it's no longer necessary to handle this manually.
-	 * It is kept to ensure external users of this method don't break.
-	 *
-	 * @since 6.3.0
-	 * @deprecated
-	 */
-	public static function set_global_styles_presets() {
-		_deprecated_function( __METHOD__, 'Gutenberg 22.5.0' );
-		self::get_all_global_styles_presets();
-	}
+
 
 	/**
 	 * Scrape all block names from global styles and store in self::$global_styles_block_names
@@ -860,18 +849,7 @@ class WP_Duotone_Gutenberg {
 		return self::$global_styles_block_names;
 	}
 
-	/**
-	 * Ensure all possible global style block names are ready.
-	 * This function is deprecated, as it's no longer necessary to handle this manually.
-	 * It is kept to ensure external users of this method don't break.
-	 *
-	 * @since 6.3.0
-	 * @deprecated
-	 */
-	public static function set_global_style_block_names() {
-		_deprecated_function( __METHOD__, 'Gutenberg 22.5.0' );
-		self::get_all_global_style_block_names();
-	}
+
 
 	/**
 	 * Render out the duotone CSS styles and SVG.

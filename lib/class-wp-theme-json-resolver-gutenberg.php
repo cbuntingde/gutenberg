@@ -118,19 +118,6 @@ class WP_Theme_JSON_Resolver_Gutenberg {
 	}
 
 	/**
-	 * Returns a data structure used in theme.json translation.
-	 *
-	 * @since 5.8.0
-	 * @deprecated 5.9.0
-	 *
-	 * @return array An array of theme.json fields that are translatable and the keys that are translatable.
-	 */
-	public static function get_fields_to_translate() {
-		_deprecated_function( __METHOD__, '5.9.0' );
-		return array();
-	}
-
-	/**
 	 * Given a theme.json structure modifies it in place to update certain values
 	 * by its translated strings according to the language set by the user.
 	 *
@@ -642,42 +629,6 @@ class WP_Theme_JSON_Resolver_Gutenberg {
 		}
 
 		return static::$user_custom_post_type_id;
-	}
-
-	/**
-	 * Determines whether the active theme has a theme.json file.
-	 *
-	 * @since 5.8.0
-	 * @since 5.9.0 Added a check in the parent theme.
-	 * @deprecated 6.2.0 Use wp_theme_has_theme_json() instead.
-	 *
-	 * @return bool
-	 */
-	public static function theme_has_support() {
-		_deprecated_function( __METHOD__, '6.2.0', 'wp_theme_has_theme_json()' );
-
-		return wp_theme_has_theme_json();
-	}
-
-	/**
-	 * Builds the path to the given file and checks that it is readable.
-	 *
-	 * If it isn't, returns an empty string, otherwise returns the whole file path.
-	 *
-	 * @since 5.8.0
-	 * @since 5.9.0 Adapted to work with child themes, added the `$template` argument.
-	 *
-	 * @param string $file_name Name of the file.
-	 * @param bool   $template  Optional. Use template theme directory. Default false.
-	 * @return string The whole file path or empty if the file doesn't exist.
-	 */
-	protected static function get_file_path_from_theme( $file_name, $template = false ) {
-		// TODO: Remove this method from core on 6.3 release.
-		_deprecated_function( __METHOD__, '6.3.0' );
-		$path      = $template ? get_template_directory() : get_stylesheet_directory();
-		$candidate = $path . '/' . $file_name;
-
-		return is_readable( $candidate ) ? $candidate : '';
 	}
 
 	/**

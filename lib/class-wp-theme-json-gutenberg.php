@@ -1630,77 +1630,7 @@ class WP_Theme_JSON_Gutenberg {
 		return $processed_css;
 	}
 
-	/**
-	 * Returns the global styles custom css.
-	 *
-	 * @since 6.2.0
-	 * @deprecated 6.7.0 Use {@see 'get_stylesheet'} instead.
-	 *
-	 * @return string The global styles custom CSS.
-	 */
-	public function get_custom_css() {
-		_deprecated_function( __METHOD__, '6.7.0', 'get_stylesheet' );
-		$block_custom_css = '';
-		$block_nodes      = $this->get_block_custom_css_nodes();
-		foreach ( $block_nodes as $node ) {
-			// The node selector will have its specificity set to 0-1-0 within process_blocks_custom_css.
-			$block_custom_css .= $this->get_block_custom_css( $node['css'], $node['selector'] );
-		}
 
-		return $this->get_base_custom_css() . $block_custom_css;
-	}
-
-	/**
-	 * Returns the global styles base custom CSS.
-	 * This function is deprecated; please do not sync to core.
-	 *
-	 * @return string The global styles base custom CSS.
-	 */
-	public function get_base_custom_css() {
-		_deprecated_function( __METHOD__, 'Gutenberg 18.6.0', 'get_stylesheet' );
-		return $this->theme_json['styles']['css'] ?? '';
-	}
-
-	/**
-	 * Returns the block nodes with custom CSS.
-	 * This function is deprecated; please do not sync to core.
-	 *
-	 * @return array The block nodes.
-	 */
-	public function get_block_custom_css_nodes() {
-		_deprecated_function( __METHOD__, 'Gutenberg 18.6.0', 'get_block_nodes' );
-		$block_nodes = array();
-
-		// Add the global styles block CSS.
-		if ( isset( $this->theme_json['styles']['blocks'] ) ) {
-			foreach ( $this->theme_json['styles']['blocks'] as $name => $node ) {
-				$custom_block_css = $this->theme_json['styles']['blocks'][ $name ]['css'] ?? null;
-				if ( $custom_block_css ) {
-					$block_nodes[] = array(
-						'name'     => $name,
-						'selector' => static::$blocks_metadata[ $name ]['selector'],
-						'css'      => $custom_block_css,
-					);
-				}
-			}
-		}
-
-		return $block_nodes;
-	}
-
-	/**
-	 * Returns the global styles custom CSS for a single block.
-	 * This function is deprecated; please do not sync to core.
-	 *
-	 * @param array  $css The block css node.
-	 * @param string $selector The block selector.
-	 *
-	 * @return string The global styles custom CSS for the block.
-	 */
-	public function get_block_custom_css( $css, $selector ) {
-		_deprecated_function( __METHOD__, 'Gutenberg 18.6.0', 'get_styles_for_block' );
-		return $this->process_blocks_custom_css( $css, $selector );
-	}
 
 	/**
 	 * Returns the page templates of the active theme.
@@ -4087,54 +4017,6 @@ class WP_Theme_JSON_Gutenberg {
 	}
 
 	/**
-	 * Determines whether a presets should be overridden or not.
-	 *
-	 * @since 5.9.0
-	 * @deprecated 6.0.0 Use {@see 'get_metadata_boolean'} instead.
-	 *
-	 * @param array      $theme_json The theme.json like structure to inspect.
-	 * @param array      $path       Path to inspect.
-	 * @param bool|array $override   Data to compute whether to override the preset.
-	 * @return boolean
-	 */
-	protected static function should_override_preset( $theme_json, $path, $override ) {
-		_deprecated_function( __METHOD__, '6.0.0', 'get_metadata_boolean' );
-
-		if ( is_bool( $override ) ) {
-			return $override;
-		}
-
-		/*
-		 * The relationship between whether to override the defaults
-		 * and whether the defaults are enabled is inverse:
-		 *
-		 * - If defaults are enabled  => theme presets should not be overridden
-		 * - If defaults are disabled => theme presets should be overridden
-		 *
-		 * For example, a theme sets defaultPalette to false,
-		 * making the default palette hidden from the user.
-		 * In that case, we want all the theme presets to be present,
-		 * so they should override the defaults.
-		 */
-		if ( is_array( $override ) ) {
-			$value = _wp_array_get( $theme_json, array_merge( $path, $override ) );
-			if ( isset( $value ) ) {
-				return ! $value;
-			}
-
-			// Search the top-level key if none was found for this node.
-			$value = _wp_array_get( $theme_json, array_merge( array( 'settings' ), $override ) );
-			if ( isset( $value ) ) {
-				return ! $value;
-			}
-
-			return true;
-		}
-
-		return false;
-	}
-
-	/**
 	 * Returns the default slugs for all the presets in an associative array
 	 * whose keys are the preset paths and the leaves is the list of slugs.
 	 *
@@ -4890,55 +4772,6 @@ class WP_Theme_JSON_Gutenberg {
 		wp_recursive_ksort( $output );
 
 		return $output;
-	}
-
-	/**
-	 * Sets the spacingSizes array based on the spacingScale values from theme.json.
-	 *
-	 * @since 6.1.0
-	 * @deprecated 6.6.0 No longer used as the spacingSizes are automatically
-	 *                   generated in the constructor and merge methods instead
-	 *                   of manually after instantiation.
-	 *
-	 * @return null|void
-	 */
-	public function set_spacing_sizes() {
-		_deprecated_function( __METHOD__, '6.6.0' );
-
-		$spacing_scale = $this->theme_json['settings']['spacing']['spacingScale']['default'] ?? array();
-
-		// Gutenberg didn't have the 1st isset check.
-		if ( ! isset( $spacing_scale['steps'] )
-			|| ! is_numeric( $spacing_scale['steps'] )
-			|| ! isset( $spacing_scale['mediumStep'] )
-			|| ! isset( $spacing_scale['unit'] )
-			|| ! isset( $spacing_scale['operator'] )
-			|| ! isset( $spacing_scale['increment'] )
-			|| ! isset( $spacing_scale['steps'] )
-			|| ! is_numeric( $spacing_scale['increment'] )
-			|| ! is_numeric( $spacing_scale['mediumStep'] )
-			|| ( '+' !== $spacing_scale['operator'] && '*' !== $spacing_scale['operator'] ) ) {
-			if ( ! empty( $spacing_scale ) ) {
-				trigger_error( __( 'Some of the theme.json settings.spacing.spacingScale values are invalid', 'gutenberg' ), E_USER_NOTICE );
-			}
-			return null;
-		}
-
-		// If theme authors want to prevent the generation of the core spacing scale they can set their theme.json spacingScale.steps to 0.
-		if ( 0 === $spacing_scale['steps'] ) {
-			return null;
-		}
-
-		$spacing_sizes = static::compute_spacing_sizes( $spacing_scale );
-
-		// If there are 7 or less steps in the scale revert to numbers for labels instead of t-shirt sizes.
-		if ( $spacing_scale['steps'] <= 7 ) {
-			for ( $spacing_sizes_count = 0; $spacing_sizes_count < count( $spacing_sizes ); $spacing_sizes_count++ ) {
-				$spacing_sizes[ $spacing_sizes_count ]['name'] = (string) ( $spacing_sizes_count + 1 );
-			}
-		}
-
-		_wp_array_set( $this->theme_json, array( 'settings', 'spacing', 'spacingSizes', 'default' ), $spacing_sizes );
 	}
 
 	/**

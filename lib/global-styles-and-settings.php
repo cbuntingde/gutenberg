@@ -131,111 +131,6 @@ function gutenberg_get_global_settings( $path = array(), $context = array() ) {
 }
 
 /**
- * Gets the global styles custom css from theme.json.
- *
- * @deprecated Gutenberg 18.6.0 Use {@see 'gutenberg_get_global_stylesheet'} instead for top-level custom CSS, or {@see 'WP_Theme_JSON_Gutenberg::get_styles_for_block'} for block-level custom CSS.
- *
- * @return string
- */
-function gutenberg_get_global_styles_custom_css() {
-	_deprecated_function( __FUNCTION__, 'Gutenberg 18.6.0', 'gutenberg_get_global_stylesheet' );
-	// Ignore cache when `WP_DEBUG` is enabled, so it doesn't interfere with the theme developers workflow.
-	$can_use_cached = ! WP_DEBUG;
-	$cache_key      = 'gutenberg_get_global_custom_css';
-	$cache_group    = 'theme_json';
-	if ( $can_use_cached ) {
-		$cached = wp_cache_get( $cache_key, $cache_group );
-		if ( $cached ) {
-			return $cached;
-		}
-	}
-
-	$tree       = WP_Theme_JSON_Resolver_Gutenberg::get_merged_data();
-	$stylesheet = $tree->get_custom_css();
-
-	if ( $can_use_cached ) {
-		wp_cache_set( $cache_key, $stylesheet, $cache_group );
-	}
-
-	return $stylesheet;
-}
-
-/**
- * Gets the global styles base custom CSS from theme.json.
- *
- * @since 6.6.0
- *
- * @return string The global base custom CSS.
- */
-function gutenberg_get_global_styles_base_custom_css() {
-	_deprecated_function( __FUNCTION__, 'Gutenberg 18.6.0', 'gutenberg_get_global_stylesheet' );
-
-	$can_use_cached = ! WP_DEBUG;
-
-	$cache_key   = 'gutenberg_get_global_styles_base_custom_css';
-	$cache_group = 'theme_json';
-	if ( $can_use_cached ) {
-		$cached = wp_cache_get( $cache_key, $cache_group );
-		if ( $cached ) {
-			return $cached;
-		}
-	}
-
-	$tree       = WP_Theme_JSON_Resolver_Gutenberg::get_merged_data();
-	$stylesheet = $tree->get_base_custom_css();
-
-	if ( $can_use_cached ) {
-		wp_cache_set( $cache_key, $stylesheet, $cache_group );
-	}
-
-	return $stylesheet;
-}
-
-/**
- * Adds the global styles per-block custom CSS from theme.json
- * to the inline style for each block.
- *
- * @since 6.6.0
- *
- * @global WP_Styles $wp_styles
- */
-function gutenberg_add_global_styles_block_custom_css() {
-	_deprecated_function( __FUNCTION__, 'Gutenberg 18.6.0', 'gutenberg_add_global_styles_for_blocks' );
-	global $wp_styles;
-
-	if ( ! wp_should_load_separate_core_block_assets() ) {
-		return;
-	}
-
-	$tree        = WP_Theme_JSON_Resolver_Gutenberg::get_merged_data();
-	$block_nodes = $tree->get_block_custom_css_nodes();
-
-	foreach ( $block_nodes as $metadata ) {
-		$block_css = $tree->get_block_custom_css( $metadata['css'], $metadata['selector'] );
-
-		$stylesheet_handle = 'global-styles';
-
-		/*
-		 * When `wp_should_load_separate_core_block_assets()` is true, follow a similar
-		 * logic to the one in `gutenberg_add_global_styles_for_blocks` to add the custom
-		 * css only when the block is rendered.
-		 */
-		if ( isset( $metadata['name'] ) ) {
-			if ( str_starts_with( $metadata['name'], 'core/' ) ) {
-				$block_name   = str_replace( 'core/', '', $metadata['name'] );
-				$block_handle = 'wp-block-' . $block_name;
-				if ( in_array( $block_handle, $wp_styles->queue, true ) ) {
-					wp_add_inline_style( $stylesheet_handle, $block_css );
-				}
-			} else {
-				wp_add_inline_style( $stylesheet_handle, $block_css );
-			}
-		}
-	}
-}
-
-
-/**
  * Adds global style rules to the inline style for each block.
  *
  * @global WP_Styles $wp_styles
@@ -347,8 +242,6 @@ function _gutenberg_clean_theme_json_caches() {
 	wp_cache_delete( 'gutenberg_get_global_stylesheet', 'theme_json' );
 	wp_cache_delete( 'gutenberg_get_global_settings_custom', 'theme_json' );
 	wp_cache_delete( 'gutenberg_get_global_settings_theme', 'theme_json' );
-	wp_cache_delete( 'gutenberg_get_global_custom_css', 'theme_json' );
-	wp_cache_delete( 'gutenberg_get_global_styles_base_custom_css', 'theme_json' );
 	WP_Theme_JSON_Resolver_Gutenberg::clean_cached_data();
 }
 add_action( 'start_previewing_theme', '_gutenberg_clean_theme_json_caches' );
