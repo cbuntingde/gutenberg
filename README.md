@@ -88,6 +88,7 @@ For full environment setup including Docker configuration, web server settings, 
 -   **Toolset Types Optimization** — Added warning for taxonomies exceeding 100 terms to prevent performance degradation
 -   **ACF Integration** — Restores Custom Fields meta box if removed by ACF or other plugins
 -   **Conflict Detection System** — Performance tracking module with plugin conflict detection and reporting
+-   **Query Loop Default Mode** — Exposed post count control in Default mode to preserve archive taxonomy context (fixes #73913)
 
 ### Error Handling Improvements
 
@@ -210,6 +211,10 @@ Changes are organized by feature area. Each entry describes what was changed and
 -   **Server Error Handling** — Added specific handling for HTTP errors (500, 502, 503, 504) with actionable server error messages
 -   **Session Expiry** — Added handling for `rest_cookie_invalid_nonce` error code with session expiry messaging
 -   **Invalid JSON Recovery** — Added improved error message for `invalid_json` code with server configuration troubleshooting guidance
+
+### Query Loop Improvements
+
+-   **Default Mode Post Count** — Exposed "Items per page" control in Default (inherit=true) mode; preserves archive taxonomy context via main query vars
 
 ### Theme Compatibility
 
