@@ -72,6 +72,19 @@ function render_block_core_post_template( $attributes, $content, $block ) {
 		$query      = new WP_Query( $query_args );
 	}
 
+		/*
+		 * When a per-page override is set on the block, re-run the query using the main
+		 * query's vars (which already encode the current archive/search context) so that
+		 * the archive scoping is preserved while still respecting the block-level limit.
+		 */
+		$per_page = isset( $block->context['query']['perPage'] ) ? (int) $block->context['query']['perPage'] : 0;
+		if ( $per_page > 0 ) {
+			$query_args                   = $query->query_vars;
+			$query_args['posts_per_page'] = $per_page;
+			$query_args['paged']          = $page;
+			$query                        = new WP_Query( $query_args );
+		}
+
 	if ( ! $query->have_posts() ) {
 		return '';
 	}
